@@ -1,0 +1,33 @@
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+name: release-please
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: simple
+          package-name: release-please-action
+          extra-files: |
+            library.properties
+      # Note: This line should be added too but it's not yet supported by the action (https://github.com/google-github-actions/release-please-action/pull/706)
+      #     { "type": "json", "path": "library.json", "jsonpath": "$.version" }
+      
+      # - uses: actions/checkout@v2
+      # - name: Setup upterm session
+      #   uses: lhotari/action-upterm@v1
+      
+      # - name: Update library.properties
+      #   run: |
+      #     cd ${{ github.workspace }}
+      #     version=$(git describe --tags --abbrev=0)
+      #     sed -i "s/^version=.*/version=${version}/" library.properties

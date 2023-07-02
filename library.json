@@ -1,0 +1,52 @@
+{
+  "name": "PSACrypto",
+  "description": "An implementation of the Platform Security Architecture Crypto API for Arduino.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/machinefi/psa-crypto"
+  },
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "IoTeX",
+      "email": "suppor@iotex.io",
+      "url": "https://iotex.io/"
+    }
+  ],
+  "platforms": [
+    "espressif8266",
+    "espressif32",
+    "atmelsam"
+  ],
+  "frameworks": [
+    "arduino"
+  ],
+  "build": {
+    "flags": [
+      "-I src"
+    ],
+    "srcFilter": [
+    ],
+    "libCompatMode": "strict"
+  },
+  "lib_ldf_mode": "deep+",
+  "export": {
+    "include": [
+      "src/*",
+      "src/include/*",
+      "examples/*",
+      "*.md",
+      "*.json",
+      "*.properties",
+      "LICENSE",
+      "*.ini",
+      "keywords.txt"
+    ],
+    "exclude": [
+      "doc/*",
+      "tests/*",
+      "tools/*",
+      "**/*.txt"
+    ]
+  }
+}

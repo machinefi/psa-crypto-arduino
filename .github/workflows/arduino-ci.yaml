@@ -1,0 +1,80 @@
+name: Arduino CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  # It's convenient to set variables for values used multiple times in the workflow
+  SKETCHES_REPORTS_PATH: sketches-reports
+  SKETCHES_REPORTS_ARTIFACT_NAME: sketches-reports
+
+jobs:
+  compile:
+    strategy:
+      matrix:
+          arduino-platform: ["arduino:samd", "esp32:esp32"]
+          include:
+            - arduino-platform: "arduino:samd"
+              fqbn: "arduino:samd:nano_33_iot"
+            - arduino-platform: "esp32:esp32"
+              fqbn: "esp32:esp32:nodemcu-32s"
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Arduino Lint
+        uses: arduino/arduino-lint-action@v1
+        with:
+          library-manager: update
+          
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+      
+      - name: Add ESP32 package index URL
+        if: ${{ matrix.arduino-platform == 'esp32:esp32' }}
+        run: | 
+          arduino-cli config init
+          arduino-cli core update-index
+          arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+
+      - name: Install platform
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install ${{ matrix.arduino-platform }}
+
+      - name: Compile sketches
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: ${{ matrix.fqbn }}
+          enable-deltas-report: true
+          sketches-report-path: ${{ env.SKETCHES_REPORTS_PATH }}
+      
+      # Add the report job to the workflow - commented out, needs fixed
+      # This step is needed to pass the size data to the report job 
+      # - name: Upload sketches report to workflow artifact
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: ${{ env.SKETCHES_REPORTS_ARTIFACT_NAME }}
+      #     path: ${{ env.SKETCHES_REPORTS_PATH }}
+
+  # When using a matrix to compile for multiple boards, it's necessary to use a separate job for the deltas report
+  # report:
+  #   needs: compile  # Wait for the compile job to finish to get the data for the report
+  #   if: github.event_name == 'pull_request' # Only run the job when the workflow is triggered by a pull request
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # This step is needed to get the size data produced by the compile jobs
+  #     - name: Download sketches reports artifact
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: ${{ env.SKETCHES_REPORTS_ARTIFACT_NAME }}
+  #         path: ${{ env.SKETCHES_REPORTS_PATH }}
+
+  #     - uses: arduino/report-size-deltas@v1
+  #       with:
+  #         sketches-reports-source: ${{ env.SKETCHES_REPORTS_PATH }}
