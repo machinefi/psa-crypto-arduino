@@ -9,6 +9,9 @@
 
 PSACrypto is an Arduino library that implements the cryptography functionality of the Platform Security Architecture (PSA) API. It provides a standardized and easy-to-use interface for cryptographic operations on Arduino boards, ensuring secure communication, data integrity, and confidentiality.
 
+PSACrypto is designed specifically for building Decentralized Infrastructure Networks ([DePIN](https://iotex.io/blog/what-are-decentralized-physical-infrastructure-networks-depin/)) projects.  
+To find more examples of DePIN projects, you can visit [DePIN Scan](https://depinscan.io/)
+
 ## Features
 
 - **Secure Key Generation**: Generate secure cryptographic keys for various algorithms.
