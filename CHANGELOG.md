@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/machinefi/psa-crypto-arduino/compare/v1.1.0...v1.1.1) (2024-05-20)
+
+
+### Bug Fixes
+
+* typo ([9cdd869](https://github.com/machinefi/psa-crypto-arduino/commit/9cdd869ae11b4fb0a6c812f9ce02c37e37aa7cd8))
+
 ## [1.1.0](https://github.com/machinefi/psa-crypto-arduino/compare/v1.0.0...v1.1.0) (2024-05-20)
 
 
